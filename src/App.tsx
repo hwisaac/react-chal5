@@ -1,25 +1,136 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import {
+  MotionStyle,
+  motion,
+  AnimatePresence,
+  addScaleCorrector,
+} from "framer-motion";
+import styled from "styled-components";
+
+const Wrapper = styled(motion.div)`
+  background-color: pink;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+`;
+
+const BoxContainer = styled(motion.div)`
+  height: auto;
+  width: auto;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 315px 315px;
+`;
+const Box = styled(motion.div)`
+  width: 300px;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 15px;
+  display: flex;
+  margin: 5px;
+  justify-content: center;
+  align-items: center;
+`;
+const ModalOverray = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: 0.2;
+`;
+const ModalBox = styled(Box)`
+  position: absolute;
+  border: 1px solid red;
+  background-color: rgba(255, 255, 255, 1);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+`;
+const Circle = styled(motion.div)`
+  width: 100px;
+  height: 100px;
+  display: flex;
+  border-radius: 100%;
+  background-color: orange;
+`;
+const Button = styled(motion.button)`
+  border: none;
+  background-color: white;
+
+  width: 100px;
+  height: 50px;
+  border-radius: 10px;
+  margin: 10px;
+  align-self: center;
+  font-weight: 700;
+`;
+
+const buttonVar = {
+  initial: {
+    scale: 1,
+    color: "#7d13ff",
+  },
+  toggled: {
+    scale: 1.1,
+    color: "#f19b39",
+  },
+};
+
+const boxVar = {
+  initial: {
+    scale: 1,
+  },
+  whileHover: {
+    scale: 1.1,
+  },
+};
 
 function App() {
+  const [modal, setModal] = useState("");
+  const [toggle, setToggle] = useState(false);
+  const [cust, setCust] = useState();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Wrapper>
+      <AnimatePresence>
+        <BoxContainer>
+          <Box
+            style={{ transformOrigin: "100% 100%" }}
+            variants={boxVar}
+            whileHover='whileHover'
+            layoutId={"a"}
+            onClick={() => setModal("a")}
+          />
+          <Box>{toggle && <Circle layoutId='circle' key={"123"} />}</Box>
+          <Box>{!toggle && <Circle layoutId='circle' key={"211"} />}</Box>
+          <Box
+            style={{ transformOrigin: "0% 0%" }}
+            variants={boxVar}
+            whileHover='whileHover'
+            initial='initial'
+            layoutId={"b"}
+            onClick={() => setModal("b")}
+          />
+        </BoxContainer>
+        <Button
+          key='132'
+          onClick={() => setToggle((prev) => !prev)}
+          variants={buttonVar}
+          animate={toggle ? "toggled" : "initial"}>
+          Switch
+        </Button>
+        {modal && (
+          <ModalOverray
+            onClick={() => setModal("")}
+            children={<ModalBox layoutId={modal} />}
+          />
+        )}
+      </AnimatePresence>
+    </Wrapper>
   );
 }
 
